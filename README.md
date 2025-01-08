@@ -39,14 +39,23 @@ Boiler Plate Code - Node JS
     11. export default connetDb;
 25. Src Folder -> app.js file -> import express from "express";
     1. import cors from "cors";
-    2. const app = express();
-    3. app.use(cors());
-    4. app.use(express.json({limit : '16kb'}));
-    5. app.use(express.urlencoded({extended : true, limit : '16kb'}));
-    6. app.use("/", (req, res, next) => {
-    7. res.status(200).json({message : "Prac Connected"})
-    8. })
-    9. export {app};
+    2. import { Visit } from "./models/visit.models.js";
+    3. const app = express();
+    4. app.use(cors());
+    5. app.use(express.json({limit : '16kb'}));
+    6. app.use(express.urlencoded({extended : true, limit : '16kb'}));
+    7. app.use("/", (req, res, next) => {
+    8. res.status(200).json({message : "Prac Connected"})
+    9. })
+    10. app.get("/users", (req, res, next) => {
+    11. Visit.find().then(data => {
+    12. res.status(200).json({
+    13. message : "User Fetched",
+    14. data : data
+    15. })
+    16. })
+    17. })
+    18. export {app};
 26. Root Folder -> index.js file -> import connetDb from "./src/db/“index.js;
     1. import { app } from "./src/app.js”;
     2. import dotenv from "dotenv";
@@ -62,4 +71,13 @@ Boiler Plate Code - Node JS
     12. console.log("MongoDB Connection Failed", error);
     13. })
 27. Terminal -> npm run start
-28. 
+28. src folder -> models folder -> create new visit.models.js  file -> import mongoose from "mongoose";
+    1. const visitSchema = new mongoose.Schema({
+    2. device : String,
+    3. ip : String,
+    4. page : String,
+    5. }, {
+    6. timestamps : true
+    7. })
+    8. export const Visit = mongoose.model("visitSchema", visitSchema)
+29. 
